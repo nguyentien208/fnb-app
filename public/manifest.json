@@ -1,0 +1,22 @@
+{
+  "short_name": "SaigonBistro",
+  "name": "Saigon Bistro - F&B QR & POS System",
+  "icons": [
+    {
+      "src": "/pwa-192x192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/pwa-512x512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#020617",
+  "theme_color": "#f97316",
+  "display": "standalone",
+  "orientation": "portrait"
+}

@@ -1,0 +1,1044 @@
+{
+  "tableSessions": [
+    {
+      "id": "session-1791197035170",
+      "tenantId": "tenant-001",
+      "branchId": "branch-001",
+      "tableId": "tbl-c01",
+      "tableNameSnapshot": "Bàn C01 (Chill)",
+      "sessionNumber": "SES-14595",
+      "status": "OPEN",
+      "openedAt": "2026-10-05T10:43:55.170Z",
+      "guestCount": 2,
+      "subtotal": 0,
+      "discountAmount": 0,
+      "serviceChargeAmount": 0,
+      "taxAmount": 0,
+      "totalAmount": 0,
+      "paidAmount": 0,
+      "remainingAmount": 0
+    },
+    {
+      "id": "session-1791197034674",
+      "tenantId": "tenant-001",
+      "branchId": "branch-001",
+      "tableId": "tbl-c02",
+      "tableNameSnapshot": "Bàn C02 (Chill)",
+      "sessionNumber": "SES-13901",
+      "status": "OPEN",
+      "openedAt": "2026-10-05T10:43:54.674Z",
+      "guestCount": 2,
+      "subtotal": 0,
+      "discountAmount": 0,
+      "serviceChargeAmount": 0,
+      "taxAmount": 0,
+      "totalAmount": 0,
+      "paidAmount": 0,
+      "remainingAmount": 0
+    },
+    {
+      "id": "session-1791197033808",
+      "tenantId": "tenant-001",
+      "branchId": "branch-001",
+      "tableId": "tbl-b01",
+      "tableNameSnapshot": "Bàn B01 (VIP)",
+      "sessionNumber": "SES-79597",
+      "status": "OPEN",
+      "openedAt": "2026-10-05T10:43:53.808Z",
+      "guestCount": 2,
+      "subtotal": 0,
+      "discountAmount": 0,
+      "serviceChargeAmount": 0,
+      "taxAmount": 0,
+      "totalAmount": 0,
+      "paidAmount": 0,
+      "remainingAmount": 0
+    },
+    {
+      "id": "session-1791197033065",
+      "tenantId": "tenant-001",
+      "branchId": "branch-001",
+      "tableId": "tbl-b02",
+      "tableNameSnapshot": "Bàn B02 (VIP)",
+      "sessionNumber": "SES-36894",
+      "status": "OPEN",
+      "openedAt": "2026-10-05T10:43:53.065Z",
+      "guestCount": 2,
+      "subtotal": 0,
+      "discountAmount": 0,
+      "serviceChargeAmount": 0,
+      "taxAmount": 0,
+      "totalAmount": 0,
+      "paidAmount": 0,
+      "remainingAmount": 0
+    },
+    {
+      "id": "session-1791197032389",
+      "tenantId": "tenant-001",
+      "branchId": "branch-001",
+      "tableId": "tbl-a04",
+      "tableNameSnapshot": "Bàn A04",
+      "sessionNumber": "SES-91356",
+      "status": "OPEN",
+      "openedAt": "2026-10-05T10:43:52.389Z",
+      "guestCount": 2,
+      "subtotal": 0,
+      "discountAmount": 0,
+      "serviceChargeAmount": 0,
+      "taxAmount": 0,
+      "totalAmount": 0,
+      "paidAmount": 0,
+      "remainingAmount": 0
+    },
+    {
+      "id": "session-1791197031694",
+      "tenantId": "tenant-001",
+      "branchId": "branch-001",
+      "tableId": "tbl-a02",
+      "tableNameSnapshot": "Bàn A02",
+      "sessionNumber": "SES-41282",
+      "status": "OPEN",
+      "openedAt": "2026-10-05T10:43:51.694Z",
+      "guestCount": 2,
+      "subtotal": 0,
+      "discountAmount": 0,
+      "serviceChargeAmount": 0,
+      "taxAmount": 0,
+      "totalAmount": 0,
+      "paidAmount": 0,
+      "remainingAmount": 0
+    },
+    {
+      "id": "session-1791181470389",
+      "tenantId": "tenant-001",
+      "branchId": "branch-001",
+      "tableId": "tbl-1791181358893",
+      "tableNameSnapshot": "Bàn đặt",
+      "sessionNumber": "SES-43409",
+      "status": "OPEN",
+      "openedAt": "2026-10-05T06:24:30.389Z",
+      "guestCount": 2,
+      "subtotal": 0,
+      "discountAmount": 0,
+      "serviceChargeAmount": 0,
+      "taxAmount": 0,
+      "totalAmount": 0,
+      "paidAmount": 0,
+      "remainingAmount": 0
+    },
+    {
+      "id": "session-1791181394105",
+      "tenantId": "tenant-001",
+      "branchId": "branch-001",
+      "tableId": "tbl-1791181358893",
+      "tableNameSnapshot": "Bàn đặt",
+      "sessionNumber": "SES-69848",
+      "status": "PAID",
+      "openedAt": "2026-10-05T06:23:14.105Z",
+      "guestCount": 2,
+      "subtotal": 125000,
+      "discountAmount": 0,
+      "serviceChargeAmount": 6250,
+      "taxAmount": 10500,
+      "totalAmount": 141750,
+      "paidAmount": 141750,
+      "remainingAmount": 0,
+      "closedAt": "2026-10-05T06:24:30.274Z"
+    },
+    {
+      "id": "session-1791179748128",
+      "tenantId": "tenant-001",
+      "branchId": "branch-001",
+      "tableId": "tbl-a03",
+      "tableNameSnapshot": "Bàn A03",
+      "sessionNumber": "SES-57528",
+      "status": "OPEN",
+      "openedAt": "2026-10-05T05:55:48.128Z",
+      "guestCount": 2,
+      "subtotal": 0,
+      "discountAmount": 0,
+      "serviceChargeAmount": 0,
+      "taxAmount": 0,
+      "totalAmount": 0,
+      "paidAmount": 0,
+      "remainingAmount": 0
+    },
+    {
+      "id": "session-demo-a01",
+      "tenantId": "tenant-001",
+      "branchId": "branch-001",
+      "tableId": "tbl-a01",
+      "tableNameSnapshot": "Bàn A01",
+      "sessionNumber": "SES-00892",
+      "status": "PAID",
+      "openedAt": "2026-10-05T05:10:48.043Z",
+      "guestCount": 2,
+      "subtotal": 618000,
+      "discountAmount": 0,
+      "serviceChargeAmount": 30900,
+      "taxAmount": 51912,
+      "totalAmount": 700812,
+      "paidAmount": 700812,
+      "remainingAmount": 0,
+      "closedAt": "2026-10-05T06:36:18.525Z"
+    }
+  ],
+  "orders": [
+    {
+      "id": "ord-1791182157526",
+      "tenantId": "tenant-001",
+      "branchId": "branch-001",
+      "tableSessionId": "session-demo-a01",
+      "orderNumber": "ORD-7990",
+      "roundNumber": 11,
+      "status": "SUBMITTED",
+      "subtotal": 40000,
+      "notes": "POS Cashier Add",
+      "createdAt": "2026-10-05T06:35:57.526Z",
+      "items": [
+        {
+          "id": "ord-item-1791182157526-0",
+          "orderId": "ord-1791182157526",
+          "productId": "prod-07",
+          "productNameSnapshot": "Khoai Tây Chiên Lắc Phô Mai",
+          "unitPriceSnapshot": 40000,
+          "quantity": 1,
+          "subtotal": 40000,
+          "kitchenStation": "KITCHEN",
+          "status": "PENDING",
+          "selectedModifiers": []
+        }
+      ]
+    },
+    {
+      "id": "ord-1791182157141",
+      "tenantId": "tenant-001",
+      "branchId": "branch-001",
+      "tableSessionId": "session-demo-a01",
+      "orderNumber": "ORD-3909",
+      "roundNumber": 10,
+      "status": "SUBMITTED",
+      "subtotal": 40000,
+      "notes": "POS Cashier Add",
+      "createdAt": "2026-10-05T06:35:57.141Z",
+      "items": [
+        {
+          "id": "ord-item-1791182157141-0",
+          "orderId": "ord-1791182157141",
+          "productId": "prod-07",
+          "productNameSnapshot": "Khoai Tây Chiên Lắc Phô Mai",
+          "unitPriceSnapshot": 40000,
+          "quantity": 1,
+          "subtotal": 40000,
+          "kitchenStation": "KITCHEN",
+          "status": "PENDING",
+          "selectedModifiers": []
+        }
+      ]
+    },
+    {
+      "id": "ord-1791182156019",
+      "tenantId": "tenant-001",
+      "branchId": "branch-001",
+      "tableSessionId": "session-demo-a01",
+      "orderNumber": "ORD-2326",
+      "roundNumber": 9,
+      "status": "SUBMITTED",
+      "subtotal": 35000,
+      "notes": "POS Cashier Add",
+      "createdAt": "2026-10-05T06:35:56.019Z",
+      "items": [
+        {
+          "id": "ord-item-1791182156019-0",
+          "orderId": "ord-1791182156019",
+          "productId": "prod-01",
+          "productNameSnapshot": "Cà Phê Sữa Đá Sài Gòn",
+          "unitPriceSnapshot": 35000,
+          "quantity": 1,
+          "subtotal": 35000,
+          "kitchenStation": "BAR",
+          "status": "PENDING",
+          "selectedModifiers": []
+        }
+      ]
+    },
+    {
+      "id": "ord-1791182155540",
+      "tenantId": "tenant-001",
+      "branchId": "branch-001",
+      "tableSessionId": "session-demo-a01",
+      "orderNumber": "ORD-2440",
+      "roundNumber": 8,
+      "status": "SUBMITTED",
+      "subtotal": 45000,
+      "notes": "POS Cashier Add",
+      "createdAt": "2026-10-05T06:35:55.540Z",
+      "items": [
+        {
+          "id": "ord-item-1791182155540-0",
+          "orderId": "ord-1791182155540",
+          "productId": "prod-03",
+          "productNameSnapshot": "Trà Sữa Ô Long Nướng Macchiato",
+          "unitPriceSnapshot": 45000,
+          "quantity": 1,
+          "subtotal": 45000,
+          "kitchenStation": "BAR",
+          "status": "PENDING",
+          "selectedModifiers": []
+        }
+      ]
+    },
+    {
+      "id": "ord-1791182154984",
+      "tenantId": "tenant-001",
+      "branchId": "branch-001",
+      "tableSessionId": "session-demo-a01",
+      "orderNumber": "ORD-4474",
+      "roundNumber": 7,
+      "status": "SUBMITTED",
+      "subtotal": 65000,
+      "notes": "POS Cashier Add",
+      "createdAt": "2026-10-05T06:35:54.984Z",
+      "items": [
+        {
+          "id": "ord-item-1791182154984-0",
+          "orderId": "ord-1791182154984",
+          "productId": "prod-05",
+          "productNameSnapshot": "Phở Bố Tái Nạm Trứng Chèn",
+          "unitPriceSnapshot": 65000,
+          "quantity": 1,
+          "subtotal": 65000,
+          "kitchenStation": "KITCHEN",
+          "status": "PENDING",
+          "selectedModifiers": []
+        }
+      ]
+    },
+    {
+      "id": "ord-1791182154356",
+      "tenantId": "tenant-001",
+      "branchId": "branch-001",
+      "tableSessionId": "session-demo-a01",
+      "orderNumber": "ORD-6356",
+      "roundNumber": 6,
+      "status": "SUBMITTED",
+      "subtotal": 40000,
+      "notes": "POS Cashier Add",
+      "createdAt": "2026-10-05T06:35:54.356Z",
+      "items": [
+        {
+          "id": "ord-item-1791182154356-0",
+          "orderId": "ord-1791182154356",
+          "productId": "prod-07",
+          "productNameSnapshot": "Khoai Tây Chiên Lắc Phô Mai",
+          "unitPriceSnapshot": 40000,
+          "quantity": 1,
+          "subtotal": 40000,
+          "kitchenStation": "KITCHEN",
+          "status": "PENDING",
+          "selectedModifiers": []
+        }
+      ]
+    },
+    {
+      "id": "ord-1791182147580",
+      "tenantId": "tenant-001",
+      "branchId": "branch-001",
+      "tableSessionId": "session-demo-a01",
+      "orderNumber": "ORD-4106",
+      "roundNumber": 5,
+      "status": "SUBMITTED",
+      "subtotal": 75000,
+      "notes": "POS Cashier Add",
+      "createdAt": "2026-10-05T06:35:47.580Z",
+      "items": [
+        {
+          "id": "ord-item-1791182147580-0",
+          "orderId": "ord-1791182147580",
+          "productId": "prod-08",
+          "productNameSnapshot": "Gà Rán Sốt Cay Hàn Quốc (4 Miếng)",
+          "unitPriceSnapshot": 75000,
+          "quantity": 1,
+          "subtotal": 75000,
+          "kitchenStation": "KITCHEN",
+          "status": "PENDING",
+          "selectedModifiers": []
+        }
+      ]
+    },
+    {
+      "id": "ord-1791182145982",
+      "tenantId": "tenant-001",
+      "branchId": "branch-001",
+      "tableSessionId": "session-demo-a01",
+      "orderNumber": "ORD-8704",
+      "roundNumber": 4,
+      "status": "SUBMITTED",
+      "subtotal": 60000,
+      "notes": "POS Cashier Add",
+      "createdAt": "2026-10-05T06:35:45.982Z",
+      "items": [
+        {
+          "id": "ord-item-1791182145982-0",
+          "orderId": "ord-1791182145982",
+          "productId": "prod-06",
+          "productNameSnapshot": "Cơm Tấm Sườn Bì Chả Trứng",
+          "unitPriceSnapshot": 60000,
+          "quantity": 1,
+          "subtotal": 60000,
+          "kitchenStation": "KITCHEN",
+          "status": "PENDING",
+          "selectedModifiers": []
+        }
+      ]
+    },
+    {
+      "id": "ord-1791182143663",
+      "tenantId": "tenant-001",
+      "branchId": "branch-001",
+      "tableSessionId": "session-demo-a01",
+      "orderNumber": "ORD-8951",
+      "roundNumber": 3,
+      "status": "SUBMITTED",
+      "subtotal": 42000,
+      "notes": "POS Cashier Add",
+      "createdAt": "2026-10-05T06:35:43.663Z",
+      "items": [
+        {
+          "id": "ord-item-1791182143663-0",
+          "orderId": "ord-1791182143663",
+          "productId": "prod-04",
+          "productNameSnapshot": "Trà Đào Cam Sả",
+          "unitPriceSnapshot": 42000,
+          "quantity": 1,
+          "subtotal": 42000,
+          "kitchenStation": "BAR",
+          "status": "PENDING",
+          "selectedModifiers": []
+        }
+      ]
+    },
+    {
+      "id": "ord-1791182142554",
+      "tenantId": "tenant-001",
+      "branchId": "branch-001",
+      "tableSessionId": "session-demo-a01",
+      "orderNumber": "ORD-4573",
+      "roundNumber": 2,
+      "status": "SUBMITTED",
+      "subtotal": 38000,
+      "notes": "POS Cashier Add",
+      "createdAt": "2026-10-05T06:35:42.554Z",
+      "items": [
+        {
+          "id": "ord-item-1791182142554-0",
+          "orderId": "ord-1791182142554",
+          "productId": "prod-02",
+          "productNameSnapshot": "Bạc Xỉu Sương Mù",
+          "unitPriceSnapshot": 38000,
+          "quantity": 1,
+          "subtotal": 38000,
+          "kitchenStation": "BAR",
+          "status": "PENDING",
+          "selectedModifiers": []
+        }
+      ]
+    },
+    {
+      "id": "ord-1791181418777",
+      "tenantId": "tenant-001",
+      "branchId": "branch-001",
+      "tableSessionId": "session-1791181394105",
+      "orderNumber": "ORD-2406",
+      "roundNumber": 1,
+      "status": "SERVED",
+      "subtotal": 125000,
+      "notes": "Khách đặt qua QR App Mobile",
+      "createdAt": "2026-10-05T06:23:38.777Z",
+      "items": [
+        {
+          "id": "ord-item-1791181418777-0",
+          "orderId": "ord-1791181418777",
+          "productId": "prod-05",
+          "productNameSnapshot": "Phở Bố Tái Nạm Trứng Chèn",
+          "unitPriceSnapshot": 65000,
+          "quantity": 1,
+          "subtotal": 65000,
+          "note": "",
+          "kitchenStation": "KITCHEN",
+          "status": "SERVED",
+          "selectedModifiers": []
+        },
+        {
+          "id": "ord-item-1791181418777-1",
+          "orderId": "ord-1791181418777",
+          "productId": "prod-06",
+          "productNameSnapshot": "Cơm Tấm Sườn Bì Chả Trứng",
+          "unitPriceSnapshot": 60000,
+          "quantity": 1,
+          "subtotal": 60000,
+          "note": "",
+          "kitchenStation": "KITCHEN",
+          "status": "SERVED",
+          "selectedModifiers": []
+        }
+      ]
+    },
+    {
+      "id": "ord-001",
+      "tenantId": "tenant-001",
+      "branchId": "branch-001",
+      "tableSessionId": "session-demo-a01",
+      "orderNumber": "ORD-0012",
+      "roundNumber": 1,
+      "status": "PREPARING",
+      "subtotal": 108000,
+      "notes": "Cho ít đá trà sữa giúp em",
+      "createdAt": "2026-10-05T05:15:48.043Z",
+      "items": [
+        {
+          "id": "ord-item-01",
+          "orderId": "ord-001",
+          "productId": "prod-03",
+          "productNameSnapshot": "Trà Sữa Ô Long Nướng Macchiato",
+          "unitPriceSnapshot": 45000,
+          "quantity": 2,
+          "subtotal": 90000,
+          "kitchenStation": "BAR",
+          "status": "PREPARING",
+          "selectedModifiers": [
+            {
+              "modifierId": "mod-size-m",
+              "modifierName": "Size M",
+              "price": 0
+            },
+            {
+              "modifierId": "mod-sugar-50",
+              "modifierName": "50% Đường",
+              "price": 0
+            },
+            {
+              "modifierId": "mod-ice-less",
+              "modifierName": "Ít đá (50%)",
+              "price": 0
+            }
+          ]
+        },
+        {
+          "id": "ord-item-02",
+          "orderId": "ord-001",
+          "productId": "prod-02",
+          "productNameSnapshot": "Bạc Xỉu Sương Mù",
+          "unitPriceSnapshot": 38000,
+          "quantity": 1,
+          "subtotal": 38000,
+          "kitchenStation": "BAR",
+          "status": "READY",
+          "selectedModifiers": [
+            {
+              "modifierId": "mod-size-m",
+              "modifierName": "Size M",
+              "price": 0
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "payments": [
+    {
+      "id": "pay-1791182178525",
+      "tenantId": "tenant-001",
+      "branchId": "branch-001",
+      "tableSessionId": "session-demo-a01",
+      "paymentMethod": "CASH",
+      "amount": 700812,
+      "receivedAmount": 700812,
+      "changeAmount": 0,
+      "transactionCode": "TXN-398511",
+      "status": "SUCCESS",
+      "paidAt": "2026-10-05T06:36:18.525Z",
+      "cashierId": "user-001"
+    },
+    {
+      "id": "pay-1791181470274",
+      "tenantId": "tenant-001",
+      "branchId": "branch-001",
+      "tableSessionId": "session-1791181394105",
+      "paymentMethod": "CASH",
+      "amount": 141750,
+      "receivedAmount": 141750,
+      "changeAmount": 0,
+      "transactionCode": "TXN-163317",
+      "status": "SUCCESS",
+      "paidAt": "2026-10-05T06:24:30.274Z",
+      "cashierId": "user-001"
+    }
+  ],
+  "tables": [
+    {
+      "id": "tbl-a01",
+      "tenantId": "tenant-001",
+      "branchId": "branch-001",
+      "floorId": "floor-01",
+      "name": "Bàn A01",
+      "code": "A01",
+      "capacity": 4,
+      "status": "CLEANING",
+      "qrToken": "token-table-a01-sec789",
+      "sortOrder": 1,
+      "active": true
+    },
+    {
+      "id": "tbl-a02",
+      "tenantId": "tenant-001",
+      "branchId": "branch-001",
+      "floorId": "floor-01",
+      "name": "Bàn A02",
+      "code": "A02",
+      "capacity": 2,
+      "status": "OCCUPIED",
+      "qrToken": "token-table-a02-sec456",
+      "sortOrder": 2,
+      "active": true
+    },
+    {
+      "id": "tbl-a03",
+      "tenantId": "tenant-001",
+      "branchId": "branch-001",
+      "floorId": "floor-01",
+      "name": "Bàn A03",
+      "code": "A03",
+      "capacity": 6,
+      "status": "OCCUPIED",
+      "qrToken": "token-table-a03-sec123",
+      "sortOrder": 3,
+      "active": true
+    },
+    {
+      "id": "tbl-a04",
+      "tenantId": "tenant-001",
+      "branchId": "branch-001",
+      "floorId": "floor-01",
+      "name": "Bàn A04",
+      "code": "A04",
+      "capacity": 4,
+      "status": "OCCUPIED",
+      "qrToken": "token-table-a04-sec321",
+      "sortOrder": 4,
+      "active": true
+    },
+    {
+      "id": "tbl-b01",
+      "tenantId": "tenant-001",
+      "branchId": "branch-001",
+      "floorId": "floor-02",
+      "name": "Bàn B01 (VIP)",
+      "code": "B01",
+      "capacity": 8,
+      "status": "OCCUPIED",
+      "qrToken": "token-table-b01-sec654",
+      "sortOrder": 5,
+      "active": true
+    },
+    {
+      "id": "tbl-b02",
+      "tenantId": "tenant-001",
+      "branchId": "branch-001",
+      "floorId": "floor-02",
+      "name": "Bàn B02 (VIP)",
+      "code": "B02",
+      "capacity": 10,
+      "status": "OCCUPIED",
+      "qrToken": "token-table-b02-sec987",
+      "sortOrder": 6,
+      "active": true
+    },
+    {
+      "id": "tbl-c01",
+      "tenantId": "tenant-001",
+      "branchId": "branch-001",
+      "floorId": "floor-03",
+      "name": "Bàn C01 (Chill)",
+      "code": "C01",
+      "capacity": 4,
+      "status": "OCCUPIED",
+      "qrToken": "token-table-c01-sec147",
+      "sortOrder": 7,
+      "active": true
+    },
+    {
+      "id": "tbl-c02",
+      "tenantId": "tenant-001",
+      "branchId": "branch-001",
+      "floorId": "floor-03",
+      "name": "Bàn C02 (Chill)",
+      "code": "C02",
+      "capacity": 4,
+      "status": "OCCUPIED",
+      "qrToken": "token-table-c02-sec258",
+      "sortOrder": 8,
+      "active": true
+    },
+    {
+      "tenantId": "tenant-001",
+      "branchId": "branch-001",
+      "floorId": "floor-01",
+      "name": "Bàn đặt",
+      "code": "BÀNĐẶT",
+      "capacity": 4,
+      "status": "OCCUPIED",
+      "sortOrder": 9,
+      "active": true,
+      "id": "tbl-1791181358893",
+      "qrToken": "token-bàn-đặt-sec119"
+    }
+  ],
+  "callWaiters": [
+    {
+      "id": "call-001",
+      "tenantId": "tenant-001",
+      "branchId": "branch-001",
+      "tableId": "tbl-a01",
+      "tableName": "Bàn A01",
+      "tableSessionId": "session-demo-a01",
+      "type": "WATER",
+      "status": "PENDING",
+      "createdAt": "2026-10-05T05:45:48.043Z"
+    }
+  ],
+  "ingredients": [
+    {
+      "id": "ing-01",
+      "tenantId": "tenant-001",
+      "branchId": "branch-001",
+      "name": "Hạt Cà Phê Robusta Buon Ma Thuot",
+      "unit": "kg",
+      "currentStock": 25.099999999999994,
+      "minStockLevel": 5,
+      "costPerUnit": 220000
+    },
+    {
+      "id": "ing-02",
+      "tenantId": "tenant-001",
+      "branchId": "branch-001",
+      "name": "Sữa Đặc Ngôi Sao Phương Nam",
+      "unit": "lon",
+      "currentStock": 48,
+      "minStockLevel": 10,
+      "costPerUnit": 24000
+    },
+    {
+      "id": "ing-03",
+      "tenantId": "tenant-001",
+      "branchId": "branch-001",
+      "name": "Trà Ô Long Nướng Hảo Hạng",
+      "unit": "kg",
+      "currentStock": 12,
+      "minStockLevel": 3,
+      "costPerUnit": 350000
+    },
+    {
+      "id": "ing-04",
+      "tenantId": "tenant-001",
+      "branchId": "branch-001",
+      "name": "Bánh Phở Tươi",
+      "unit": "kg",
+      "currentStock": 30,
+      "minStockLevel": 8,
+      "costPerUnit": 20000
+    },
+    {
+      "id": "ing-05",
+      "tenantId": "tenant-001",
+      "branchId": "branch-001",
+      "name": "Thịt Bỏ Tái Mỹ (Nạm/Bắp)",
+      "unit": "kg",
+      "currentStock": 18.2,
+      "minStockLevel": 5,
+      "costPerUnit": 280000
+    }
+  ],
+  "auditLogs": [
+    {
+      "id": "log-1791197035170",
+      "tenantId": "tenant-001",
+      "userName": "Nguyễn Văn Admin",
+      "action": "OPEN_SESSION",
+      "entityType": "TableSession",
+      "entityId": "session-1791197035170",
+      "details": "Mở phiên làm việc tại Bàn C01 (Chill)",
+      "createdAt": "2026-10-05T10:43:55.170Z"
+    },
+    {
+      "id": "log-1791197034674",
+      "tenantId": "tenant-001",
+      "userName": "Nguyễn Văn Admin",
+      "action": "OPEN_SESSION",
+      "entityType": "TableSession",
+      "entityId": "session-1791197034674",
+      "details": "Mở phiên làm việc tại Bàn C02 (Chill)",
+      "createdAt": "2026-10-05T10:43:54.674Z"
+    },
+    {
+      "id": "log-1791197033808",
+      "tenantId": "tenant-001",
+      "userName": "Nguyễn Văn Admin",
+      "action": "OPEN_SESSION",
+      "entityType": "TableSession",
+      "entityId": "session-1791197033808",
+      "details": "Mở phiên làm việc tại Bàn B01 (VIP)",
+      "createdAt": "2026-10-05T10:43:53.808Z"
+    },
+    {
+      "id": "log-1791197033065",
+      "tenantId": "tenant-001",
+      "userName": "Nguyễn Văn Admin",
+      "action": "OPEN_SESSION",
+      "entityType": "TableSession",
+      "entityId": "session-1791197033065",
+      "details": "Mở phiên làm việc tại Bàn B02 (VIP)",
+      "createdAt": "2026-10-05T10:43:53.065Z"
+    },
+    {
+      "id": "log-1791197032389",
+      "tenantId": "tenant-001",
+      "userName": "Nguyễn Văn Admin",
+      "action": "OPEN_SESSION",
+      "entityType": "TableSession",
+      "entityId": "session-1791197032389",
+      "details": "Mở phiên làm việc tại Bàn A04",
+      "createdAt": "2026-10-05T10:43:52.389Z"
+    },
+    {
+      "id": "log-1791197031694",
+      "tenantId": "tenant-001",
+      "userName": "Nguyễn Văn Admin",
+      "action": "OPEN_SESSION",
+      "entityType": "TableSession",
+      "entityId": "session-1791197031694",
+      "details": "Mở phiên làm việc tại Bàn A02",
+      "createdAt": "2026-10-05T10:43:51.694Z"
+    },
+    {
+      "id": "log-1791182178526",
+      "tenantId": "tenant-001",
+      "userName": "Nguyễn Văn Admin",
+      "action": "PAYMENT_SUCCESS",
+      "entityType": "Payment",
+      "entityId": "pay-1791182178525",
+      "details": "Thanh toán CASH cho Bàn A01: 700.812 ₫",
+      "createdAt": "2026-10-05T06:36:18.526Z"
+    },
+    {
+      "id": "log-1791182157526",
+      "tenantId": "tenant-001",
+      "userName": "Nguyễn Văn Admin",
+      "action": "SUBMIT_ORDER",
+      "entityType": "Order",
+      "entityId": "ord-1791182157526",
+      "details": "Gửi Order Round 11 (ORD-7990) tại Bàn A01",
+      "createdAt": "2026-10-05T06:35:57.526Z"
+    },
+    {
+      "id": "log-1791182157141",
+      "tenantId": "tenant-001",
+      "userName": "Nguyễn Văn Admin",
+      "action": "SUBMIT_ORDER",
+      "entityType": "Order",
+      "entityId": "ord-1791182157141",
+      "details": "Gửi Order Round 10 (ORD-3909) tại Bàn A01",
+      "createdAt": "2026-10-05T06:35:57.141Z"
+    },
+    {
+      "id": "log-1791182156019",
+      "tenantId": "tenant-001",
+      "userName": "Nguyễn Văn Admin",
+      "action": "SUBMIT_ORDER",
+      "entityType": "Order",
+      "entityId": "ord-1791182156019",
+      "details": "Gửi Order Round 9 (ORD-2326) tại Bàn A01",
+      "createdAt": "2026-10-05T06:35:56.019Z"
+    },
+    {
+      "id": "log-1791182155540",
+      "tenantId": "tenant-001",
+      "userName": "Nguyễn Văn Admin",
+      "action": "SUBMIT_ORDER",
+      "entityType": "Order",
+      "entityId": "ord-1791182155540",
+      "details": "Gửi Order Round 8 (ORD-2440) tại Bàn A01",
+      "createdAt": "2026-10-05T06:35:55.540Z"
+    },
+    {
+      "id": "log-1791182154984",
+      "tenantId": "tenant-001",
+      "userName": "Nguyễn Văn Admin",
+      "action": "SUBMIT_ORDER",
+      "entityType": "Order",
+      "entityId": "ord-1791182154984",
+      "details": "Gửi Order Round 7 (ORD-4474) tại Bàn A01",
+      "createdAt": "2026-10-05T06:35:54.984Z"
+    },
+    {
+      "id": "log-1791182154356",
+      "tenantId": "tenant-001",
+      "userName": "Nguyễn Văn Admin",
+      "action": "SUBMIT_ORDER",
+      "entityType": "Order",
+      "entityId": "ord-1791182154356",
+      "details": "Gửi Order Round 6 (ORD-6356) tại Bàn A01",
+      "createdAt": "2026-10-05T06:35:54.356Z"
+    },
+    {
+      "id": "log-1791182147581",
+      "tenantId": "tenant-001",
+      "userName": "Nguyễn Văn Admin",
+      "action": "SUBMIT_ORDER",
+      "entityType": "Order",
+      "entityId": "ord-1791182147580",
+      "details": "Gửi Order Round 5 (ORD-4106) tại Bàn A01",
+      "createdAt": "2026-10-05T06:35:47.581Z"
+    },
+    {
+      "id": "log-1791182145983",
+      "tenantId": "tenant-001",
+      "userName": "Nguyễn Văn Admin",
+      "action": "SUBMIT_ORDER",
+      "entityType": "Order",
+      "entityId": "ord-1791182145982",
+      "details": "Gửi Order Round 4 (ORD-8704) tại Bàn A01",
+      "createdAt": "2026-10-05T06:35:45.983Z"
+    },
+    {
+      "id": "log-1791182143663",
+      "tenantId": "tenant-001",
+      "userName": "Nguyễn Văn Admin",
+      "action": "SUBMIT_ORDER",
+      "entityType": "Order",
+      "entityId": "ord-1791182143663",
+      "details": "Gửi Order Round 3 (ORD-8951) tại Bàn A01",
+      "createdAt": "2026-10-05T06:35:43.663Z"
+    },
+    {
+      "id": "log-1791182142554",
+      "tenantId": "tenant-001",
+      "userName": "Nguyễn Văn Admin",
+      "action": "SUBMIT_ORDER",
+      "entityType": "Order",
+      "entityId": "ord-1791182142554",
+      "details": "Gửi Order Round 2 (ORD-4573) tại Bàn A01",
+      "createdAt": "2026-10-05T06:35:42.554Z"
+    },
+    {
+      "id": "log-1791181470390",
+      "tenantId": "tenant-001",
+      "userName": "Nguyễn Văn Admin",
+      "action": "OPEN_SESSION",
+      "entityType": "TableSession",
+      "entityId": "session-1791181470389",
+      "details": "Mở phiên làm việc tại Bàn đặt",
+      "createdAt": "2026-10-05T06:24:30.390Z"
+    },
+    {
+      "id": "log-1791181470274",
+      "tenantId": "tenant-001",
+      "userName": "Nguyễn Văn Admin",
+      "action": "PAYMENT_SUCCESS",
+      "entityType": "Payment",
+      "entityId": "pay-1791181470274",
+      "details": "Thanh toán CASH cho Bàn đặt: 141.750 ₫",
+      "createdAt": "2026-10-05T06:24:30.274Z"
+    },
+    {
+      "id": "log-1791181445844",
+      "tenantId": "tenant-001",
+      "userName": "Nguyễn Văn Admin",
+      "action": "UPDATE_STOCK",
+      "entityType": "Ingredient",
+      "entityId": "ing-01",
+      "details": "Xuất 0.1 nguyên liệu. Note: Trừ kho khi chế biến Phở Bố Tái Nạm Trứng Chèn",
+      "createdAt": "2026-10-05T06:24:05.844Z"
+    },
+    {
+      "id": "log-1791181444902",
+      "tenantId": "tenant-001",
+      "userName": "Nguyễn Văn Admin",
+      "action": "UPDATE_STOCK",
+      "entityType": "Ingredient",
+      "entityId": "ing-01",
+      "details": "Xuất 0.1 nguyên liệu. Note: Trừ kho khi chế biến Cơm Tấm Sườn Bì Chả Trứng",
+      "createdAt": "2026-10-05T06:24:04.902Z"
+    },
+    {
+      "id": "log-1791181440401",
+      "tenantId": "tenant-001",
+      "userName": "Nguyễn Văn Admin",
+      "action": "UPDATE_STOCK",
+      "entityType": "Ingredient",
+      "entityId": "ing-01",
+      "details": "Xuất 0.1 nguyên liệu. Note: Trừ kho khi chế biến Cơm Tấm Sườn Bì Chả Trứng",
+      "createdAt": "2026-10-05T06:24:00.401Z"
+    },
+    {
+      "id": "log-1791181439254",
+      "tenantId": "tenant-001",
+      "userName": "Nguyễn Văn Admin",
+      "action": "UPDATE_STOCK",
+      "entityType": "Ingredient",
+      "entityId": "ing-01",
+      "details": "Xuất 0.1 nguyên liệu. Note: Trừ kho khi chế biến Phở Bố Tái Nạm Trứng Chèn",
+      "createdAt": "2026-10-05T06:23:59.254Z"
+    },
+    {
+      "id": "log-1791181418777",
+      "tenantId": "tenant-001",
+      "userName": "Nguyễn Văn Admin",
+      "action": "SUBMIT_ORDER",
+      "entityType": "Order",
+      "entityId": "ord-1791181418777",
+      "details": "Gửi Order Round 1 (ORD-2406) tại Bàn đặt",
+      "createdAt": "2026-10-05T06:23:38.777Z"
+    },
+    {
+      "id": "log-1791181394105",
+      "tenantId": "tenant-001",
+      "userName": "Nguyễn Văn Admin",
+      "action": "OPEN_SESSION",
+      "entityType": "TableSession",
+      "entityId": "session-1791181394105",
+      "details": "Mở phiên làm việc tại Bàn đặt",
+      "createdAt": "2026-10-05T06:23:14.105Z"
+    },
+    {
+      "id": "log-1791181358894",
+      "tenantId": "tenant-001",
+      "userName": "Nguyễn Văn Admin",
+      "action": "ADD_TABLE",
+      "entityType": "Table",
+      "entityId": "tbl-1791181358893",
+      "details": "Thêm bàn mới: Bàn đặt kèm Mã QR",
+      "createdAt": "2026-10-05T06:22:38.894Z"
+    },
+    {
+      "id": "log-1791179748128",
+      "tenantId": "tenant-001",
+      "userName": "Nguyễn Văn Admin",
+      "action": "OPEN_SESSION",
+      "entityType": "TableSession",
+      "entityId": "session-1791179748128",
+      "details": "Mở phiên làm việc tại Bàn A03",
+      "createdAt": "2026-10-05T05:55:48.128Z"
+    },
+    {
+      "id": "log-001",
+      "tenantId": "tenant-001",
+      "userName": "Nguyễn Văn Admin",
+      "action": "SYSTEM_INIT",
+      "entityType": "System",
+      "entityId": "tenant-001",
+      "details": "Khởi tạo hệ thống F&B Multi-tenant kèm Realtime WebSocket Server",
+      "createdAt": "2026-10-05T05:55:48.043Z"
+    }
+  ]
+}

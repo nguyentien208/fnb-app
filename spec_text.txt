@@ -1,0 +1,1231 @@
+ĐẶC TẢ HỆ THỐNG
+F&B QR ORDERING + POS + KDS + PAYMENT
+Tài liệu nghiệp vụ • Kiến trúc • Database • API • Realtime • Thanh toán
+Phiên bản: 1.0
+Ngày biên soạn: 05/10/2026
+Định hướng triển khai: MVP → Production → Multi-tenant SaaS
+LƯU Ý: 
+Tài liệu này được viết như một Product Requirement Document (PRD) kết hợp Software Design Specification (SDS). Có thể dùng làm nền tảng để phân tích nghiệp vụ, thiết kế database/API, chia task và bắt đầu lập trình.
+MỤC LỤC
+1. Tổng quan sản phẩm và phạm vi
+2. Mục tiêu, người dùng và mô hình vận hành
+3. Nghiệp vụ F&B cốt lõi
+4. Luồng khách hàng QR Ordering
+5. Table Session / Open Check / Round – xương sống nghiệp vụ
+6. Quản lý menu, sản phẩm, modifier
+7. Order lifecycle và các tình huống thực tế
+8. Kitchen Display System (KDS)
+9. POS / Thu ngân
+10. Payment: tiền mặt, VietQR, ví điện tử, mixed payment
+11. Quản lý bàn, chuyển bàn, gộp/tách bàn
+12. Khuyến mãi, giảm giá, phí, thuế
+13. Kho, nguyên liệu, recipe và tồn kho
+14. Nhân viên, ca làm, role & permission
+15. Customer, loyalty và notification
+16. Báo cáo và dashboard
+17. Database design / ERD logic
+18. API specification
+19. Realtime / WebSocket / Event architecture
+20. Security và các vấn đề backend quan trọng
+21. Kiến trúc hệ thống đề xuất
+22. Công nghệ và kỹ năng cần có
+23. Thiết kế UI/UX theo từng ứng dụng
+24. Testing và acceptance criteria
+25. DevOps, deployment và monitoring
+26. Roadmap triển khai MVP → Production
+27. Checklist trước khi go-live
+28. Các lỗi thiết kế thường gặp
+29. Định hướng mở rộng SaaS
+30. Tài liệu tham khảo
+1. TỔNG QUAN SẢN PHẨM VÀ PHẠM VI
+Hệ thống là nền tảng quản lý và gọi món cho nhà hàng, quán ăn, cafe, trà sữa và mô hình F&B. Khách có thể quét QR tại bàn để mở menu, chọn sản phẩm và modifier, gửi order; nhân viên/bếp nhận order theo thời gian thực; thu ngân quản lý hóa đơn; khách thanh toán bằng tiền mặt, chuyển khoản/VietQR hoặc ví điện tử; quản lý theo dõi doanh thu, món bán chạy và vận hành.
+1.1 Các ứng dụng thành phần
+Ứng dụng
+Đối tượng
+Chức năng chính
+Customer Web / PWA
+Khách
+Scan QR, menu, chọn món, cart, đặt món, xem trạng thái, thanh toán
+POS
+Thu ngân/nhân viên
+Bàn, order, thêm món, chuyển/gộp/tách bàn, thanh toán, in hóa đơn
+KDS
+Bếp/Bar
+Nhận order realtime, bắt đầu làm, hoàn tất, ưu tiên, timer
+Admin
+Owner/Manager
+Menu, bàn, nhân viên, payment, khuyến mãi, kho, báo cáo
+Backend API
+Hệ thống
+Nghiệp vụ, auth, order, payment, inventory, event
+WebSocket
+Hệ thống
+Realtime giữa Customer/POS/KDS/Admin
+1.2 Ngoài phạm vi MVP
+Giao hàng tích hợp bên thứ ba.
+Kế toán đầy đủ và hạch toán doanh nghiệp.
+Payroll/phần mềm nhân sự đầy đủ.
+Multi-tenant SaaS ngay ở bản đầu.
+AI dự báo tồn kho/doanh thu.
+2. MỤC TIÊU, NGƯỜI DÙNG VÀ MÔ HÌNH VẬN HÀNH
+2.1 Actors
+Actor
+Quyền/Trách nhiệm
+Customer
+Xem menu, tạo order, thêm món, yêu cầu thanh toán, thanh toán
+Waiter
+Tạo/sửa order, hỗ trợ khách, chuyển bàn, gửi món
+Cashier
+Quản lý bill, nhận tiền, QR payment, refund theo quyền
+Kitchen
+Xử lý món tại station bếp
+Bar
+Xử lý đồ uống
+Manager
+Quản lý vận hành, báo cáo, menu, nhân viên
+Owner/Admin
+Toàn quyền hoặc gần toàn quyền
+2.2 Mô hình vận hành
+CUSTOMER
+  ↓ Scan QR bàn
+TABLE → OPEN SESSION → ORDER / ROUND → KDS
+                                  ↓
+                               READY
+                                  ↓
+                            OPEN CHECK
+                                  ↓
+                               PAYMENT
+                                  ↓
+                         PAID → CLOSE SESSION
+                                  ↓
+                              TABLE FREE
+3. NGHIỆP VỤ F&B CỐT LÕI
+Hệ thống phải được thiết kế xoay quanh 5 đối tượng nghiệp vụ chính:
+Đối tượng
+Ý nghĩa
+Table
+Vị trí vật lý nơi khách ngồi.
+Session / Open Check
+Phiên phục vụ của một bàn từ lúc mở đến khi thanh toán/đóng.
+Order / Round
+Một hoặc nhiều lần khách gọi món trong cùng session.
+Order Item
+Từng món cụ thể, có quantity, giá tại thời điểm bán, modifier, note, station.
+Payment
+Một hoặc nhiều giao dịch dùng để thanh toán check.
+LƯU Ý: 
+Không nên mô hình hóa hệ thống thành 'mỗi lần khách gọi = một order độc lập = thanh toán ngay'. Mô hình đó không xử lý tốt việc khách gọi thêm, thanh toán cuối bữa, mixed payment, chuyển bàn hoặc gộp/tách bill.
+4. LUỒNG KHÁCH HÀNG QR ORDERING
+4.1 Luồng chuẩn
+1. Khách ngồi bàn
+2. Scan QR
+3. Backend resolve QR → branch + table
+4. Kiểm tra session đang OPEN
+5. Hiển thị menu
+6. Khách chọn product
+7. Chọn size / đường / đá / topping / ghi chú
+8. Add to cart
+9. Review cart
+10. Submit order
+11. Backend tính lại giá
+12. Tạo order/round + items
+13. Emit OrderCreated
+14. KDS nhận realtime
+15. Bếp/Bar xử lý
+16. READY → customer/POS nhận event
+17. Khách gọi thêm nếu muốn
+18. Cuối cùng yêu cầu bill
+19. Thanh toán
+20. Payment verified
+21. Close session
+22. Table AVAILABLE
+4.2 QR bàn
+https://domain.vn/t/{opaque_table_token}
+QR token không nên chứa trực tiếp ID bàn dễ đoán.
+Backend resolve:
+token → table → branch → restaurant → active session
+4.3 Khách không cần tài khoản ở MVP
+Ưu tiên mobile web/PWA; scan → order ngay.
+Có thể tạo guest_session/device token để giữ cart và theo dõi trạng thái.
+Customer account/OTP/loyalty để ở phase sau.
+5. TABLE SESSION / OPEN CHECK / ROUND – XƯƠNG SỐNG NGHIỆP VỤ
+Đây là phần quan trọng nhất để hệ thống xử lý đúng thực tế. Một bàn có thể gọi món nhiều lần nhưng vẫn thuộc cùng một phiên phục vụ.
+TABLE 05
+   │
+   └── SESSION #S10025 (OPEN)
+          │
+          ├── ROUND #R1
+          │     ├── Matcha x2
+          │     └── Khoai x1
+          │
+          ├── ROUND #R2
+          │     └── Trà đào x1
+          │
+          └── ROUND #R3
+                └── Bánh x2
+TOTAL SESSION = sum(all valid order items) - discount + fee + tax
+5.1 Trạng thái session
+Status
+Ý nghĩa
+OPEN
+Bàn đang phục vụ.
+BILL_REQUESTED
+Khách/nhân viên yêu cầu thanh toán.
+PAYING
+Đang xử lý thanh toán.
+PAID
+Đã thanh toán đủ.
+CLOSED
+Đã kết thúc phiên.
+CANCELLED
+Phiên bị hủy theo nghiệp vụ.
+5.2 Trường hợp gọi thêm
+Session #S10025
+Round 1 = 115,000
+Round 2 = 45,000
+------------------
+Current total = 160,000
+Khách trả tiền mặt:
+received = 200,000
+change = 40,000
+Payment = CASH / 160,000
+Session = PAID
+Table = AVAILABLE
+5.3 Sau khi đã thanh toán
+Không sửa ngược payment cũ để nhét món mới vào.
+Nếu khách gọi thêm sau khi session đã đóng, tạo session/order mới hoặc mở lại theo chính sách quán.
+Nếu quán muốn gộp lại, phải có audit trail rõ ràng.
+6. QUẢN LÝ MENU, SẢN PHẨM, MODIFIER
+6.1 Category / Product
+Entity
+Field quan trọng
+categories
+id, branch_id, name, image, sort_order, is_active
+products
+id, category_id, name, description, image, base_price, station_id, is_active
+6.2 Modifier
+Matcha
+ ├─ Size (single)
+ │   ├─ M
+ │   └─ L +5,000
+ ├─ Đường (single)
+ │   ├─ 100%
+ │   ├─ 70%
+ │   ├─ 50%
+ │   └─ 0%
+ ├─ Đá (single)
+ │   ├─ Bình thường
+ │   ├─ Ít đá
+ │   └─ Không đá
+ └─ Topping (multiple)
+     ├─ Trân châu +5,000
+     ├─ Pudding +8,000
+     └─ Kem cheese +10,000
+6.3 Quy tắc
+Modifier group phải có min/max selection.
+Có thể bắt buộc chọn size.
+Giá modifier phải snapshot vào order item khi bán.
+Không lấy giá hiện tại của product để tính lại order cũ.
+7. ORDER LIFECYCLE VÀ TÌNH HUỐNG THỰC TẾ
+7.1 Order status đề xuất
+DRAFT
+  ↓
+SUBMITTED
+  ↓
+CONFIRMED
+  ↓
+PREPARING
+  ↓
+READY
+  ↓
+SERVED
+  ↓
+COMPLETED
+Các nhánh:
+CANCELLED
+REJECTED
+REFUNDED
+7.2 Payment status phải tách Order status
+Order
+Payment
+Ý nghĩa
+PREPARING
+UNPAID
+Đang làm, chưa thanh toán.
+READY
+UNPAID
+Món xong nhưng chưa trả.
+SERVED
+PAID
+Đã phục vụ và đã trả.
+COMPLETED
+PARTIALLY_PAID
+Có thể còn công nợ nếu quán cho phép.
+7.3 Các nghiệp vụ bắt buộc
+Thêm món vào session đang OPEN.
+Hủy item trước khi KDS bắt đầu làm.
+Hủy item sau khi đang làm phải có quyền và lý do.
+Chuyển bàn.
+Gộp bàn/order.
+Tách bill.
+Split tender / mixed payment.
+Refund.
+Void/cancel payment theo chính sách.
+Ghi audit log cho thao tác nhạy cảm.
+8. KITCHEN DISPLAY SYSTEM (KDS)
+KDS là màn hình realtime cho bếp/bar. Order có thể được route theo kitchen station.
+ORDER #10293
+Table 05
+BAR
+  2 × Matcha L
+      50% sugar
+      less ice
+      + pearl
+KITCHEN
+  1 × Fried chicken
+  1 × Fries
+8.1 Station routing
+Station
+Ví dụ
+BAR
+Trà sữa, cafe, trà
+HOT_KITCHEN
+Món chiên, món nóng
+COLD_KITCHEN
+Salad, món lạnh
+DESSERT
+Bánh, kem
+PACKING
+Đóng gói/takeaway
+8.2 KDS realtime
+Customer/POS
+   ↓ POST /orders
+Laravel
+   ↓ DB transaction
+OrderCreated event
+   ↓
+WebSocket / Reverb
+   ├─ KDS BAR
+   ├─ KDS KITCHEN
+   └─ POS
+KDS → Preparing
+KDS → Ready
+   ↓ event
+Customer/POS/Admin update instantly
+9. POS / THU NGÂN
+9.1 Màn hình POS
+Sơ đồ bàn theo khu vực/tầng.
+Bàn trống/đang phục vụ/chờ thanh toán.
+Open check của bàn.
+Thêm món/chỉnh modifier.
+Chuyển/gộp/tách bàn.
+Yêu cầu thanh toán.
+Cash / QR / ví / mixed payment.
+In hóa đơn/phiếu bếp nếu có máy in.
+9.2 Tiền mặt
+Total:       160,000
+Received:    200,000
+Change:       40,000
+payment_method = CASH
+amount = 160000
+received_amount = 200000
+change_amount = 40000
+cashier_id = ...
+paid_at = ...
+LƯU Ý: 
+Không nên lưu tiền dưới dạng floating point. Dùng integer theo đơn vị tiền nhỏ nhất hoặc DECIMAL phù hợp database.
+10. PAYMENT: TIỀN MẶT, VIETQR, VÍ ĐIỆN TỬ, MIXED PAYMENT
+10.1 Payment methods
+Method
+Đặc điểm
+CASH
+Thu ngân xác nhận số tiền nhận và tiền thừa.
+BANK_TRANSFER
+Có thể là chuyển khoản thủ công hoặc tích hợp đối soát.
+VIETQR
+QR/payment gateway; cần trạng thái và webhook/đối soát theo nhà cung cấp.
+MOMO
+Payment API/QR tùy sản phẩm và hợp đồng merchant.
+ZALOPAY
+Payment API/QR và callback server-side.
+CARD
+Tùy terminal/acquirer; không nên tự lưu thông tin thẻ nhạy cảm.
+10.2 VietQR/payment gateway flow
+Backend
+  ↓ create payment request
+Provider
+  ↓ QR/payment URL
+Customer scans
+  ↓
+Bank/payment network
+  ↓
+Provider webhook
+  ↓
+Backend validates
+  ↓
+Check order code + amount + transaction
+  ↓
+Idempotency check
+  ↓
+DB transaction
+  ↓
+payment = PAID
+order/session = paid enough
+  ↓
+broadcast PaymentCompleted
+10.3 Mixed payment
+CHECK TOTAL = 500,000
+Payment #1
+CASH = 200,000
+Payment #2
+VIETQR = 300,000
+sum(successful payments) = 500,000
+→ CHECK PAID
+10.4 Payment invariants
+Frontend không được tự quyết định payment = PAID.
+Webhook phải được xác thực.
+Kiểm tra amount và order reference.
+Chống xử lý webhook trùng bằng idempotency key/transaction reference.
+Payment amount không được vượt check total nếu nghiệp vụ không cho phép overpayment.
+Refund phải tạo transaction riêng, không xóa payment cũ.
+11. QUẢN LÝ BÀN, CHUYỂN BÀN, GỘP/TÁCH
+11.1 Table status
+AVAILABLE
+  ↓
+OCCUPIED
+  ↓
+ORDERING
+  ↓
+BILL_REQUESTED
+  ↓
+PAYING
+  ↓
+PAID
+  ↓
+CLEANING
+  ↓
+AVAILABLE
+11.2 Chuyển bàn
+Session S10025
+table_id: 05
+      ↓ transfer
+table_id: 08
+Audit:
+actor_id
+from_table = 05
+to_table = 08
+reason
+timestamp
+11.3 Gộp bàn
+Hai session đang mở có thể được merge theo chính sách.
+Không xóa lịch sử; dùng parent/merge reference.
+Bill cuối phải truy vết được item đến nguồn ban đầu.
+11.4 Tách bill
+Tách theo item.
+Tách theo người.
+Tách theo số tiền.
+Mỗi payment có thể gắn với một bill/check split.
+12. KHUYẾN MÃI, GIẢM GIÁ, PHÍ, THUẾ
+Loại
+Ví dụ
+Item discount
+Giảm 10% một sản phẩm
+Order discount
+Giảm 50k toàn bill
+Coupon
+Mã GIAM20
+Promotion
+Mua 2 tặng 1
+Service fee
+Phí phục vụ
+Tax
+Thuế theo chính sách/quy định áp dụng
+Cần snapshot các giá trị đã áp dụng vào order để hóa đơn lịch sử không thay đổi khi admin sửa promotion.
+13. KHO, NGUYÊN LIỆU, RECIPE VÀ TỒN KHO
+13.1 Recipe
+MATCHA LATTE
+  Matcha powder  10 g
+  Milk          100 ml
+  Sugar          20 g
+  Ice           100 g
+  Pearl          30 g (optional)
+13.2 Inventory transaction
+Type
+Ví dụ
+PURCHASE
+Nhập 20 kg đường
+SALE_CONSUMPTION
+Bán 100 ly → trừ nguyên liệu
+WASTE
+Hỏng/đổ
+ADJUSTMENT
+Kiểm kê điều chỉnh
+TRANSFER
+Chuyển kho giữa chi nhánh
+RETURN
+Trả hàng nhà cung cấp
+13.3 Không chỉ lưu stock = stock - x
+Phải có ledger/transaction history.
+Có thể rebuild stock từ transaction.
+Có audit người thực hiện.
+Có unit conversion: kg/g, l/ml, thùng/chai...
+14. NHÂN VIÊN, CA LÀM, ROLE & PERMISSION
+Role
+Quyền đề xuất
+OWNER
+Toàn quyền
+ADMIN
+Cấu hình hệ thống
+MANAGER
+Vận hành, báo cáo, menu, nhân sự
+CASHIER
+POS, payment, bill
+WAITER
+Order, table, hỗ trợ khách
+KITCHEN
+KDS bếp
+BAR
+KDS bar
+14.1 Permission mẫu
+order.create
+order.update
+order.cancel
+order.discount
+order.transfer_table
+order.merge
+order.split
+payment.create
+payment.refund
+payment.void
+menu.view
+menu.create
+menu.update
+menu.delete
+inventory.view
+inventory.adjust
+report.view
+staff.manage
+settings.manage
+14.2 Audit log
+Ai làm?
+Làm gì?
+Trên đối tượng nào?
+Giá trị trước/sau?
+Lúc nào?
+Từ thiết bị/IP/session nào nếu cần?
+15. CUSTOMER, LOYALTY VÀ NOTIFICATION
+MVP có thể guest-first. Phase sau mới thêm account.
+Feature
+MVP
+Phase 2+
+Guest ordering
+✓
+✓
+Order history
+—
+✓
+OTP account
+—
+✓
+Loyalty points
+—
+✓
+Voucher
+Có thể
+✓
+Push notification
+Web realtime
+✓
+16. BÁO CÁO VÀ DASHBOARD
+Report
+Chỉ số
+Revenue
+Gross, discount, net, tax/fee nếu có
+Orders
+Số order, average order value
+Products
+Số lượng bán, doanh thu
+Category
+Doanh thu theo nhóm
+Payment
+Cash/QR/MoMo/ZaloPay/card
+Peak hours
+Đơn/doanh thu theo giờ
+Staff
+Order/payment theo nhân viên
+Inventory
+Nhập/xuất/tồn/waste
+16.1 Dashboard MVP
+TODAY
+Revenue             12,500,000
+Orders                    184
+Average order             67,935
+Open tables                  12
+Pending kitchen              8
+Top products:
+1. Trà đào
+2. Matcha
+3. Trân châu
+17. DATABASE DESIGN / ERD LOGIC
+17.1 Core tables
+restaurants
+branches
+tables
+table_qr_codes
+table_sessions
+categories
+products
+modifier_groups
+modifier_options
+product_modifier_groups
+orders
+order_rounds
+order_items
+order_item_modifiers
+kitchen_stations
+kitchen_orders
+kitchen_order_items
+payments
+payment_transactions
+refunds
+users
+roles
+permissions
+role_permissions
+customers
+discounts
+promotions
+coupons
+inventory_items
+recipes
+recipe_items
+inventory_transactions
+notifications
+audit_logs
+17.2 ERD logic
+Restaurant
+  └─ Branch
+      ├─ Tables
+      │    └─ Table QR
+      │
+      ├─ Users / Roles
+      │
+      ├─ Categories
+      │    └─ Products
+      │         └─ Modifier Groups
+      │              └─ Modifier Options
+      │
+      ├─ Kitchen Stations
+      │
+      ├─ Table Sessions
+      │    ├─ Orders
+      │    │    ├─ Order Rounds
+      │    │    └─ Order Items
+      │    │          └─ Item Modifiers
+      │    │
+      │    └─ Payments
+      │          └─ Payment Transactions
+      │
+      └─ Inventory
+           ├─ Recipes
+           └─ Inventory Transactions
+17.3 Bảng quan trọng – orders
+Field
+Type gợi ý
+Ghi chú
+id
+BIGINT/UUID
+PK
+session_id
+FK
+Open session
+branch_id
+FK
+Chi nhánh
+order_code
+VARCHAR
+Mã hiển thị
+status
+ENUM/VARCHAR
+Lifecycle
+subtotal
+DECIMAL
+Snapshot
+discount_total
+DECIMAL
+Snapshot
+tax_total
+DECIMAL
+Snapshot
+fee_total
+DECIMAL
+Snapshot
+grand_total
+DECIMAL
+Snapshot
+created_by
+FK nullable
+Khách/waiter/system
+17.4 order_items
+Field
+Ghi chú
+order_id
+FK
+product_id
+FK nullable nếu cần giữ lịch sử
+product_name
+Snapshot tên
+unit_price
+Snapshot giá
+quantity
+Số lượng
+modifier_total
+Tổng modifier
+line_total
+Thành tiền
+note
+Ghi chú pha chế
+kitchen_status
+NEW/PREPARING/READY/...
+station_id
+Route tới KDS
+18. API SPECIFICATION
+18.1 Auth
+Method
+Endpoint
+Mục đích
+POST
+/api/auth/login
+Đăng nhập
+POST
+/api/auth/logout
+Đăng xuất
+GET
+/api/auth/me
+Thông tin user
+18.2 Customer/Menu
+Method
+Endpoint
+Mục đích
+GET
+/api/public/tables/{token}
+Resolve QR
+GET
+/api/public/menu
+Lấy menu
+GET
+/api/public/products/{id}
+Chi tiết sản phẩm
+18.3 Orders
+Method
+Endpoint
+Mục đích
+POST
+/api/orders
+Tạo order/round
+GET
+/api/orders/{id}
+Chi tiết
+POST
+/api/orders/{id}/items
+Thêm món
+POST
+/api/orders/{id}/cancel
+Hủy
+POST
+/api/orders/{id}/request-bill
+Yêu cầu bill
+18.4 KDS
+Method
+Endpoint
+Mục đích
+GET
+/api/kds/orders
+Danh sách ticket
+POST
+/api/kds/items/{id}/start
+Bắt đầu làm
+POST
+/api/kds/items/{id}/ready
+Món xong
+POST
+/api/kds/orders/{id}/complete
+Hoàn tất ticket
+18.5 Payment
+Method
+Endpoint
+Mục đích
+POST
+/api/payments
+Tạo payment
+GET
+/api/payments/{id}
+Kiểm tra payment
+POST
+/api/webhooks/vietqr
+Webhook VietQR/provider
+POST
+/api/webhooks/momo
+Webhook MoMo
+POST
+/api/webhooks/zalopay
+Callback ZaloPay
+18.6 API response chuẩn
+{
+  "success": true,
+  "data": {...},
+  "message": "OK",
+  "meta": {
+    "request_id": "..."
+  }
+}
+18.7 Error format
+{
+  "success": false,
+  "error": {
+    "code": "ORDER_NOT_OPEN",
+    "message": "Order is not open",
+    "details": {}
+  },
+  "meta": {
+    "request_id": "..."
+  }
+}
+19. REALTIME / WEBSOCKET / EVENT ARCHITECTURE
+Đề xuất Laravel Reverb + Laravel Echo cho stack Laravel. Laravel hiện hỗ trợ broadcasting qua Reverb, Pusher, Ably và Mercure; Reverb là WebSocket server first-party của Laravel. 
+19.1 Events
+Event
+Consumer
+OrderCreated
+KDS, POS, Admin
+OrderItemAdded
+KDS, POS
+OrderPreparing
+Customer, POS
+OrderReady
+Customer, POS
+PaymentCompleted
+Customer, POS, Admin
+TableStatusChanged
+POS, Admin
+SessionClosed
+POS, Admin
+19.2 Channel design
+private-branch.{branchId}
+private-kds.{stationId}
+private-session.{sessionId}
+private-order.{orderId}
+Authorization:
+- KDS chỉ subscribe station được cấp quyền.
+- POS chỉ branch được phép.
+- Customer chỉ session/order token của mình.
+LƯU Ý: 
+Realtime chỉ là kênh cập nhật; database vẫn là source of truth. Nếu client mất WebSocket, khi reconnect phải fetch state hiện tại từ API.
+20. SECURITY VÀ CÁC VẤN ĐỀ BACKEND QUAN TRỌNG
+20.1 Không tin frontend
+Frontend gửi:
+product_id
+quantity
+modifier_ids
+Backend tự:
+- load product
+- load modifier
+- validate availability
+- calculate price
+- calculate discount
+- calculate tax/fee
+- calculate grand total
+20.2 Idempotency
+Webhook A
+Webhook A
+Webhook A
+→ transaction/reference đã xử lý?
+→ YES: return success / ignore duplicate
+→ NO: process once
+20.3 Database transaction
+BEGIN
+  create/update payment
+  update session payment status
+  create audit log
+COMMIT
+Nếu lỗi → ROLLBACK
+20.4 Security checklist
+HTTPS/WSS.
+Password hashing.
+Sanctum/session/JWT tùy kiến trúc.
+Authorization bằng Policy/Permission.
+Rate limiting.
+Validation mọi input.
+Không expose secret payment key ở frontend.
+Webhook signature/MAC validation.
+CORS giới hạn origin.
+XSS/SQL injection protection.
+Audit log.
+Backup database.
+Không log secret/payment credentials.
+21. KIẾN TRÚC HỆ THỐNG ĐỀ XUẤT
+                         INTERNET
+                             │
+                        Cloudflare/CDN
+                             │
+                          Nginx
+              ┌──────────────┴──────────────┐
+              │                             │
+          Next.js                        Laravel API
+       Customer/POS/KDS/Admin                │
+              │                     ┌────────┼────────┐
+              │                     │        │        │
+              │                  MySQL     Redis    Queue
+              │                     │        │        │
+              │                     └────────┼────────┘
+              │                              │
+              └──────────── WebSocket/Reverb ┘
+                             │
+                       Payment Providers
+                   VietQR / MoMo / ZaloPay
+21.1 Monolith trước, microservices sau
+MVP nên là modular monolith.
+Không cần microservices ngay.
+Tách module trong code: Order, Payment, Kitchen, Inventory, Catalog, Identity.
+Khi scale mới cân nhắc tách service.
+22. CÔNG NGHỆ VÀ KỸ NĂNG CẦN CÓ
+Layer
+Đề xuất
+Kỹ năng
+Frontend
+Next.js + React + TypeScript
+Component, state, forms, SSR/CSR, routing
+UI
+Tailwind CSS
+Responsive, accessibility
+Data fetching
+TanStack Query
+Cache, mutation, invalidation
+State
+Zustand/Context
+Cart/session/UI state
+Backend
+Laravel
+REST, Eloquent, validation, policy
+DB
+MySQL/PostgreSQL
+ERD, index, transaction, locking
+Cache/Queue
+Redis
+Cache, queue, jobs
+Realtime
+Laravel Reverb/Echo
+Broadcast, channels, reconnect
+Payment
+VietQR/provider/MoMo/ZaloPay
+API, callback/webhook, idempotency
+DevOps
+Docker/Nginx/VPS
+Deploy, SSL, logs, backup
+Git
+GitHub
+Branch, PR, CI/CD
+22.1 Thứ tự học
+HTML/CSS
+→ JavaScript
+→ TypeScript
+→ React
+→ Next.js
+→ REST API
+→ Laravel
+→ MySQL
+→ Auth/Permission
+→ F&B domain modeling
+→ WebSocket
+→ Redis/Queue
+→ Payment/Webhook
+→ Docker/Deploy
+→ Testing/Monitoring
+23. THIẾT KẾ UI/UX THEO TỪNG ỨNG DỤNG
+23.1 Customer
+Header
+[Logo] [Bàn 05] [Cart]
+Category tabs
+[Best Seller] [Trà sữa] [Trà] [Đồ ăn]
+Product card
+[Image]
+Matcha Latte
+45,000
+[Add]
+Cart bottom sheet
+3 items | 125,000
+[View cart]
+23.2 POS
+LEFT: TABLE MAP
+RIGHT: OPEN CHECK
+BOTTOM: Payment / Transfer / Split / Merge
+23.3 KDS
+NEW | PREPARING | READY
+Each ticket:
+#10293
+Table 05
+2 Matcha L
+1 Peach Tea
+Note...
+[START] / [READY]
+23.4 Admin
+Dashboard.
+Catalog/menu.
+Tables/QR.
+Orders.
+Kitchen stations.
+Payments.
+Inventory.
+Staff & permissions.
+Reports.
+Settings.
+24. TESTING VÀ ACCEPTANCE CRITERIA
+24.1 Unit test
+Tính giá product + modifier.
+Discount.
+Tax/fee.
+Order total.
+Payment remaining.
+Cash change.
+Inventory consumption.
+24.2 Integration test
+Create order → DB → KDS event.
+KDS ready → customer event.
+Payment webhook → payment/order state.
+Duplicate webhook does not duplicate money.
+Cancel item updates KDS correctly.
+24.3 E2E scenarios
+Scenario
+Expected
+Scan QR → order 1 round
+KDS receives
+Add second round
+Same session, new round
+Cash 200k for 160k
+Change 40k
+QR payment success
+PAID after verified callback
+QR webhook duplicated
+One payment only
+Transfer table
+Session follows new table
+Merge two tables
+Bill/history preserved
+Split bill
+Payments sum to total
+Cancel item before prep
+No kitchen completion
+Product price changed
+Old order retains old price
+25. DEVOPS, DEPLOYMENT VÀ MONITORING
+25.1 Production components
+Component
+Vai trò
+Cloudflare/CDN
+DNS, TLS, protection/cache tùy cấu hình
+Nginx
+Reverse proxy
+Next.js
+Frontend
+PHP-FPM/Laravel
+API
+MySQL/PostgreSQL
+Database
+Redis
+Cache/queue
+Reverb
+WebSocket
+Queue Worker
+Background jobs
+Supervisor/systemd
+Process management
+Sentry/monitoring
+Error tracking
+25.2 Backup
+Daily database backup tối thiểu.
+Retention policy.
+Test restore định kỳ.
+Backup không nằm cùng một máy duy nhất.
+25.3 Observability
+request_id cho mỗi request.
+Structured logs.
+Payment webhook logs có masking dữ liệu nhạy cảm.
+Error monitoring.
+Health check API/DB/Redis/WebSocket.
+26. ROADMAP TRIỂN KHAI MVP → PRODUCTION
+Phase
+Phạm vi
+Phase 0
+Requirement, user flow, ERD, API contract, UI wireframe
+Phase 1
+Auth, branch, table, QR, catalog
+Phase 2
+Customer menu, modifier, cart, order
+Phase 3
+KDS + WebSocket
+Phase 4
+POS + cash payment
+Phase 5
+VietQR/payment integration + webhook
+Phase 6
+Reports + audit + testing
+Phase 7
+Inventory/recipe
+Phase 8
+MoMo/ZaloPay + promotions
+Phase 9
+Production hardening
+Phase 10
+Multi-branch/SaaS
+26.1 MVP nên dừng ở đâu?
+MVP tốt nhất nên kết thúc khi khách có thể scan QR → chọn món → order → KDS nhận realtime → nhân viên xử lý → khách gọi thêm → thu ngân nhận tiền mặt hoặc QR → payment được ghi nhận → session đóng → bàn trở về AVAILABLE.
+27. CHECKLIST TRƯỚC KHI GO-LIVE
+QR từng bàn hoạt động và có thể revoke.
+Không cho khách order vào bàn/session đã đóng.
+Order total được tính server-side.
+Modifier được snapshot.
+Product price cũ không bị thay đổi theo menu mới.
+KDS không mất order khi WebSocket disconnect.
+Reconnect WebSocket phải resync state.
+Cash change tính chính xác.
+Payment webhook xác thực.
+Duplicate webhook không tạo duplicate payment.
+Payment amount đối chiếu với order.
+Refund có audit.
+Role/permission đã test.
+Chuyển/gộp/tách bàn đã test.
+Database backup đã test restore.
+SSL/WSS hoạt động.
+Logs không lộ secret.
+Mobile Safari/Chrome đã test.
+Tablet POS/KDS đã test.
+Có phương án khi internet mất.
+28. CÁC LỖI THIẾT KẾ THƯỜNG GẶP
+Lỗi
+Cách đúng
+Mỗi lần gọi món tạo order độc lập và đóng ngay
+Dùng Table Session/Open Check + Round
+Frontend gửi total và backend tin luôn
+Backend tự tính
+Payment = PAID khi frontend bấm nút
+Provider/webhook/verification
+Không lưu payment transaction
+Payment ledger + transaction reference
+Không có idempotency
+Chống duplicate webhook
+KDS polling liên tục
+WebSocket + fallback fetch
+Product order chỉ lưu product_id
+Snapshot tên/giá/modifier
+Stock chỉ là một số stock
+Inventory transaction ledger
+Xóa order/item
+Soft cancel/void + audit
+Microservices ngay từ đầu
+Modular monolith
+Bắt khách đăng ký trước khi order
+Guest-first QR ordering
+29. ĐỊNH HƯỚNG MỞ RỘNG SAAS
+Khi sản phẩm dùng cho nhiều quán, chuyển từ single-restaurant sang multi-tenant.
+Tenant / Restaurant
+  ├─ Branch
+  │   ├─ Tables
+  │   ├─ Users
+  │   ├─ Menu
+  │   ├─ Orders
+  │   ├─ Payments
+  │   └─ Inventory
+  │
+  └─ Billing / Subscription
+Mọi dữ liệu business phải có restaurant_id/tenant_id hoặc nằm dưới entity có tenant rõ ràng.
+Authorization phải kiểm tra tenant boundary.
+Không để user tenant A truy cập ID của tenant B chỉ bằng cách sửa URL/API.
+Sau khi có volume lớn mới cân nhắc database partitioning/sharding/service split.
+30. TÀI LIỆU THAM KHẢO VÀ GHI CHÚ RESEARCH
+Các tài liệu dưới đây được dùng để đối chiếu những phần kỹ thuật có tính thay đổi theo nhà cung cấp, đặc biệt là payment callback/webhook và realtime.
+Nguồn
+URL
+Dùng cho
+VietQR.io – Payment Requests / Webhook
+https://vietqr.io/paymentRequests/
+Tài liệu API tạo payment request và webhook; response có orderCode, amount, status và webhook payload.
+ZaloPay – API Integration
+https://developer.zalopay.vn/
+Tài liệu tích hợp API; callback server-to-server và cơ chế xác thực callback.
+MoMo Developers
+https://developers.momo.vn/
+Tài liệu developer về payment/API và notification/callback.
+Laravel 13 – Broadcasting
+https://laravel.com/docs/13.x/broadcasting
+Broadcasting events qua Reverb/Pusher/Ably/Mercure và Laravel Echo.
+Laravel Reverb
+https://reverb.laravel.com/
+WebSocket server first-party của Laravel.
+Ghi chú về payment provider
+Payment API, điều kiện merchant, phí, hạn mức, endpoint, SDK và yêu cầu KYC/hợp đồng có thể thay đổi theo nhà cung cấp. Khi triển khai production phải khóa phiên bản tài liệu/API theo merchant account thực tế và kiểm thử sandbox trước.
+PHỤ LỤC A — BỘ USER STORY CỐT LÕI
+As a customer, I can scan a table QR and see the correct branch/table menu.
+As a customer, I can choose product modifiers and see the final price.
+As a customer, I can submit an order without creating an account.
+As a customer, I can add another round to the same open session.
+As a cashier, I can open a table and see all items in the current check.
+As a cashier, I can accept cash and calculate change.
+As a cashier, I can accept multiple payment methods for one check.
+As a kitchen user, I receive new tickets in realtime.
+As a kitchen user, I can move a ticket from NEW to PREPARING to READY.
+As a manager, I can see revenue and payment breakdown.
+As an admin, I can manage products, modifiers, tables and QR codes.
+As a manager, I can audit sensitive actions.
+PHỤ LỤC B — BỘ STATE MACHINE TÓM TẮT
+TABLE
+AVAILABLE → OCCUPIED → ORDERING → BILL_REQUESTED → PAYING → PAID → CLEANING → AVAILABLE
+SESSION
+OPEN → BILL_REQUESTED → PAYING → PAID → CLOSED
+       └→ CANCELLED
+ORDER
+DRAFT → SUBMITTED → CONFIRMED → PREPARING → READY → SERVED → COMPLETED
+          └→ CANCELLED
+PAYMENT
+PENDING → PROCESSING → SUCCEEDED
+                    ├→ FAILED
+                    └→ EXPIRED
+REFUND
+REQUESTED → PROCESSING → SUCCEEDED
+                      └→ FAILED
+PHỤ LỤC C — STACK KHUYẾN NGHỊ CHO PROJECT CÁ NHÂN
+Frontend:
+  Next.js
+  React
+  TypeScript
+  Tailwind CSS
+  TanStack Query
+  Zustand
+Backend:
+  Laravel
+  PHP
+  REST API
+  Laravel Sanctum
+Database:
+  MySQL hoặc PostgreSQL
+Realtime:
+  Laravel Reverb
+  Laravel Echo
+Infrastructure:
+  Redis
+  Queue Worker
+  Nginx
+  Docker
+  VPS/Cloud
+Payment:
+  VietQR/provider
+  MoMo
+  ZaloPay
+Quality:
+  PHPUnit/Pest
+  Playwright
+  ESLint
+  PHPStan/Larastan
+  GitHub Actions
+  Sentry
+PHỤ LỤC D — MỤC TIÊU PORTFOLIO/CV
+Nếu dùng project này làm portfolio Frontend Developer, nên nhấn mạnh: thiết kế UI mobile-first; QR ordering; state management; realtime KDS; API integration; payment UI; responsive POS/KDS; error/loading/empty states; và khả năng hiểu business flow. Không nên chỉ ghi 'làm website quản lý quán ăn'.

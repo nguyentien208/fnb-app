@@ -1,0 +1,206 @@
+-- GourmetOS F&B SaaS Database Schema for MySQL 8.0+
+CREATE DATABASE IF NOT EXISTS fnb_saas CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE fnb_saas;
+
+-- Tenants Table
+CREATE TABLE IF NOT EXISTS tenants (
+  id VARCHAR(64) PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  slug VARCHAR(255) NOT NULL UNIQUE,
+  domain VARCHAR(255) NOT NULL,
+  logo_url TEXT,
+  status ENUM('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Branches Table
+CREATE TABLE IF NOT EXISTS branches (
+  id VARCHAR(64) PRIMARY KEY,
+  tenant_id VARCHAR(64) NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  code VARCHAR(64) NOT NULL,
+  phone VARCHAR(64) NOT NULL,
+  address TEXT NOT NULL,
+  tax_number VARCHAR(64) NOT NULL,
+  vat_rate DECIMAL(5,2) DEFAULT 8.00,
+  service_charge_rate DECIMAL(5,2) DEFAULT 5.00,
+  bank_name VARCHAR(255) NOT NULL,
+  bank_account_no VARCHAR(64) NOT NULL,
+  bank_account_name VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (tenant_id) REFERENCES tenants(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Users Table
+CREATE TABLE IF NOT EXISTS users (
+  id VARCHAR(64) PRIMARY KEY,
+  tenant_id VARCHAR(64) NOT NULL,
+  branch_id VARCHAR(64),
+  name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL UNIQUE,
+  phone VARCHAR(64) NOT NULL,
+  role ENUM('SUPER_ADMIN', 'TENANT_ADMIN', 'BRANCH_MANAGER', 'CASHIER', 'WAITER', 'KITCHEN', 'INVENTORY', 'ACCOUNTANT', 'CUSTOMER') DEFAULT 'CUSTOMER',
+  permissions_json JSON,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (tenant_id) REFERENCES tenants(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Floors Table
+CREATE TABLE IF NOT EXISTS floors (
+  id VARCHAR(64) PRIMARY KEY,
+  branch_id VARCHAR(64) NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  sort_order INT DEFAULT 1,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (branch_id) REFERENCES branches(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Tables Table
+CREATE TABLE IF NOT EXISTS `tables` (
+  id VARCHAR(64) PRIMARY KEY,
+  tenant_id VARCHAR(64) NOT NULL,
+  branch_id VARCHAR(64) NOT NULL,
+  floor_id VARCHAR(64) NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  code VARCHAR(64) NOT NULL,
+  capacity INT DEFAULT 4,
+  status ENUM('AVAILABLE', 'OCCUPIED', 'ORDERING', 'BILL_REQUESTED', 'PAYING', 'CLEANING', 'DISABLED') DEFAULT 'AVAILABLE',
+  qr_token VARCHAR(255) NOT NULL UNIQUE,
+  sort_order INT DEFAULT 1,
+  active TINYINT(1) DEFAULT 1,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (branch_id) REFERENCES branches(id) ON DELETE CASCADE,
+  FOREIGN KEY (floor_id) REFERENCES floors(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Table Sessions Table
+CREATE TABLE IF NOT EXISTS table_sessions (
+  id VARCHAR(64) PRIMARY KEY,
+  tenant_id VARCHAR(64) NOT NULL,
+  branch_id VARCHAR(64) NOT NULL,
+  table_id VARCHAR(64) NOT NULL,
+  table_name_snapshot VARCHAR(255) NOT NULL,
+  session_number VARCHAR(64) NOT NULL UNIQUE,
+  status ENUM('OPEN', 'BILL_REQUESTED', 'PAYING', 'PAID', 'CLOSED', 'CANCELLED') DEFAULT 'OPEN',
+  opened_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  closed_at TIMESTAMP NULL,
+  guest_count INT DEFAULT 2,
+  subtotal DECIMAL(12,2) DEFAULT 0,
+  discount_amount DECIMAL(12,2) DEFAULT 0,
+  discount_reason VARCHAR(255),
+  service_charge_amount DECIMAL(12,2) DEFAULT 0,
+  tax_amount DECIMAL(12,2) DEFAULT 0,
+  total_amount DECIMAL(12,2) DEFAULT 0,
+  paid_amount DECIMAL(12,2) DEFAULT 0,
+  remaining_amount DECIMAL(12,2) DEFAULT 0,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (table_id) REFERENCES `tables`(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Categories Table
+CREATE TABLE IF NOT EXISTS categories (
+  id VARCHAR(64) PRIMARY KEY,
+  tenant_id VARCHAR(64) NOT NULL,
+  branch_id VARCHAR(64) NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  slug VARCHAR(255) NOT NULL,
+  icon VARCHAR(64) DEFAULT 'Utensils',
+  sort_order INT DEFAULT 1,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Products Table
+CREATE TABLE IF NOT EXISTS products (
+  id VARCHAR(64) PRIMARY KEY,
+  tenant_id VARCHAR(64) NOT NULL,
+  branch_id VARCHAR(64) NOT NULL,
+  category_id VARCHAR(64) NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  slug VARCHAR(255) NOT NULL,
+  sku VARCHAR(64) NOT NULL,
+  description TEXT,
+  image TEXT,
+  price DECIMAL(12,2) NOT NULL,
+  cost_price DECIMAL(12,2) DEFAULT 0,
+  kitchen_station ENUM('BAR', 'KITCHEN', 'DESSERT') DEFAULT 'KITCHEN',
+  status ENUM('AVAILABLE', 'OUT_OF_STOCK', 'HIDDEN') DEFAULT 'AVAILABLE',
+  modifier_group_ids_json JSON,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Orders Table
+CREATE TABLE IF NOT EXISTS orders (
+  id VARCHAR(64) PRIMARY KEY,
+  tenant_id VARCHAR(64) NOT NULL,
+  branch_id VARCHAR(64) NOT NULL,
+  table_session_id VARCHAR(64) NOT NULL,
+  order_number VARCHAR(64) NOT NULL,
+  round_number INT DEFAULT 1,
+  status ENUM('SUBMITTED', 'CONFIRMED', 'PREPARING', 'READY', 'SERVED', 'COMPLETED', 'CANCELLED') DEFAULT 'SUBMITTED',
+  subtotal DECIMAL(12,2) DEFAULT 0,
+  notes TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (table_session_id) REFERENCES table_sessions(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Order Items Table
+CREATE TABLE IF NOT EXISTS order_items (
+  id VARCHAR(64) PRIMARY KEY,
+  order_id VARCHAR(64) NOT NULL,
+  product_id VARCHAR(64) NOT NULL,
+  product_name_snapshot VARCHAR(255) NOT NULL,
+  unit_price_snapshot DECIMAL(12,2) NOT NULL,
+  quantity INT NOT NULL DEFAULT 1,
+  subtotal DECIMAL(12,2) NOT NULL,
+  note TEXT,
+  kitchen_station ENUM('BAR', 'KITCHEN', 'DESSERT') DEFAULT 'KITCHEN',
+  status ENUM('PENDING', 'CONFIRMED', 'PREPARING', 'READY', 'SERVED', 'CANCELLED') DEFAULT 'PENDING',
+  selected_modifiers_json JSON,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Payments Table
+CREATE TABLE IF NOT EXISTS payments (
+  id VARCHAR(64) PRIMARY KEY,
+  tenant_id VARCHAR(64) NOT NULL,
+  branch_id VARCHAR(64) NOT NULL,
+  table_session_id VARCHAR(64) NOT NULL,
+  payment_method ENUM('CASH', 'VIETQR', 'BANK_TRANSFER', 'MOMO', 'ZALOPAY', 'CARD') NOT NULL,
+  amount DECIMAL(12,2) NOT NULL,
+  received_amount DECIMAL(12,2) NOT NULL,
+  change_amount DECIMAL(12,2) DEFAULT 0,
+  transaction_code VARCHAR(128) NOT NULL,
+  status ENUM('PENDING', 'SUCCESS', 'FAILED', 'REFUNDED') DEFAULT 'SUCCESS',
+  paid_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  cashier_id VARCHAR(64),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (table_session_id) REFERENCES table_sessions(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Ingredients Table
+CREATE TABLE IF NOT EXISTS ingredients (
+  id VARCHAR(64) PRIMARY KEY,
+  tenant_id VARCHAR(64) NOT NULL,
+  branch_id VARCHAR(64) NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  unit VARCHAR(64) NOT NULL,
+  current_stock DECIMAL(12,2) DEFAULT 0,
+  min_stock_level DECIMAL(12,2) DEFAULT 5,
+  cost_per_unit DECIMAL(12,2) DEFAULT 0,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Audit Logs Table
+CREATE TABLE IF NOT EXISTS audit_logs (
+  id VARCHAR(64) PRIMARY KEY,
+  tenant_id VARCHAR(64) NOT NULL,
+  user_name VARCHAR(255) NOT NULL,
+  action VARCHAR(128) NOT NULL,
+  entity_type VARCHAR(128) NOT NULL,
+  entity_id VARCHAR(64) NOT NULL,
+  details TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
