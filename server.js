@@ -5,7 +5,6 @@ import cors from 'cors';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { createServer as createViteServer } from 'vite';
 import { initMySqlDatabase, saveStateToMySql, loadStateFromMySql } from './db.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -121,11 +120,16 @@ async function startServer() {
     });
     console.log('📦 Production static assets loaded from /dist');
   } else {
-    const vite = await createViteServer({
-      server: { middlewareMode: true },
-      appType: 'spa',
-    });
-    app.use(vite.middlewares);
+    try {
+      const { createServer: createViteServer } = await import('vite');
+      const vite = await createViteServer({
+        server: { middlewareMode: true },
+        appType: 'spa',
+      });
+      app.use(vite.middlewares);
+    } catch (e) {
+      console.log('Vite middleware skipped in production environment');
+    }
   }
 
   const PORT = process.env.PORT || 3000;
